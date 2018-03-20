@@ -1,8 +1,12 @@
 package randomstring
 
 import (
+	"fmt"
+	"log"
 	"testing"
 	"unicode"
+
+	"github.com/nouney/randomstring"
 )
 
 func TestBasic(t *testing.T) {
@@ -26,4 +30,20 @@ func TestNumCharset(t *testing.T) {
 			t.FailNow()
 		}
 	}
+}
+
+// Use the default generator.
+func ExampleRandomStringGenerator() {
+	str := randomstring.Generate(16)
+	fmt.Println("Random string:", str)
+}
+
+// Create a generator with a specific charset.
+func ExampleRandomStringGenerator_charset() {
+	rsg, err := randomstring.NewGenerator(randomstring.CharsetNum)
+	if err != nil {
+		log.Fatal(err)
+	}
+	str := rsg.Generate(16)
+	fmt.Println("Random string:", str)
 }
