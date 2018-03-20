@@ -1,4 +1,8 @@
-# Randomstring
+# Randomstring 
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/nouney/randomstring)](https://goreportcard.com/report/github.com/nouney/randomstring)
+
+[![GoDoc](https://godoc.org/github.com/nouney/randomstring?status.svg)](https://godoc.org/github.com/nouney/randomstring)
 
 A small Golang package to easely generate random strings.
 
