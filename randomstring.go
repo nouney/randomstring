@@ -9,19 +9,20 @@ import (
 )
 
 const (
-	// [a-zA-Z0-9]+
-	// Used by default.
-	CharsetAlphaNum = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	// [a-z]+
+	CharsetAlphaLow = "abcdefghijklmnopqrstuvwxyz"
+	// [A-Z]+
+	CharsetAlphaUp = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	// [0-9]+
 	CharsetNum = "0123456789"
 )
 
 var (
-	rsg *RandomStringGenerator
+	rsg *Generator
 )
 
 func init() {
-	rsg, _ = NewGenerator(CharsetAlphaNum)
+	rsg, _ = NewGenerator(CharsetAlphaLow, CharsetAlphaUp, CharsetNum)
 }
 
 // Generate a random string of length `n` using the default generator
@@ -30,22 +31,25 @@ func Generate(n int) string {
 }
 
 // A random string generator
-type RandomStringGenerator struct {
+type Generator struct {
 	charset       string
 	charsetLength int
 	letterIdxBits uint
 }
 
 // Create a new generator with the given charset
-func NewGenerator(charset string) (*RandomStringGenerator, error) {
-	ret := &RandomStringGenerator{}
-	return ret.WithCharset(charset)
+func NewGenerator(charsets ...string) (*Generator, error) {
+	ret := &Generator{}
+	return ret.WithCharsets(charsets...)
 }
 
 // Change the charset of the generator
-func (rsg *RandomStringGenerator) WithCharset(c string) (*RandomStringGenerator, error) {
-	rsg.charset = c
-	rsg.charsetLength = len(c)
+func (rsg *Generator) WithCharsets(cs ...string) (*Generator, error) {
+	rsg.charset = ""
+	for _, c := range cs {
+		rsg.charset += c
+	}
+	rsg.charsetLength = len(rsg.charset)
 	letterIdxBits := math.Ceil(math.Log2(float64(rsg.charsetLength)))
 	if letterIdxBits == 0 {
 		return nil, errors.New("charset too long")
@@ -55,7 +59,7 @@ func (rsg *RandomStringGenerator) WithCharset(c string) (*RandomStringGenerator,
 }
 
 // Generate a random string of length `n`
-func (rsg *RandomStringGenerator) Generate(n int) string {
+func (rsg *Generator) Generate(n int) string {
 	var letterIdxMask int64 = 1<<rsg.letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
 	var letterIdxMax = 63 / rsg.letterIdxBits          // # of letter indices fitting in 63 bits
 	var src = rand.NewSource(time.Now().UnixNano())
