@@ -20,27 +20,38 @@ package main
 
 import (
     "fmt"
+    "log"
 
     "github.com/nouney/randomstring"
 )
 
 func main() {
     // Generate an alphanum random string of 16 chars
-    str := randomstring.Generate(16)
+    str := randomstring.Generate(4)
     fmt.Println("Alphanum:", str)
 
+    // Create a generator using digits
     rsg, err := randomstring.NewGenerator(randomstring.CharsetNum)
     if err != nil {
         log.Panic(err)
     }
-    str = rsg.Generate(6)
+    str = rsg.Generate(3)
     fmt.Println("Num:", str)
 
+    // Create a generator using digits and lowercase alphabet
+    rsg, err = randomstring.NewGenerator(randomstring.CharsetNum, randomstring.CharsetAlphaLow)
+    if err != nil {
+        log.Panic(err)
+    }
+    str = rsg.Generate(8)
+    fmt.Println("Alphanumlow:", str)
+
+    // Create a generator with a custom charset
     rsg, err = randomstring.NewGenerator("AbCdEfGhIjKlMnOpQrStUvWxYz")
     if err != nil {
         log.Panic(err)
     }
-    str = rsg.Generate(6)
+    str = rsg.Generate(18)
     fmt.Println("Custom charset:", str)
 }
 
@@ -48,5 +59,6 @@ func main() {
 
 ## Default charsets
 
-- `CharsetAlphaNum`: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+- `CharsetAlphaLow`: "abcdefghijklmnopqrstuvwxyz"
+- `CharsetAlphaUp`: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 - `CharsetNum`: "0123456789"
